@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".OneActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btnLoadImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择图片" />
+
+        <Button
+            android:id="@+id/btnBlurImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="均值模糊" />
+
+        <Button
+            android:id="@+id/btnBlurImgGS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="高斯模糊" />
+
+        <Button
+            android:id="@+id/btnBlurImgMid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="中值模糊" />
+
+        <Button
+            android:id="@+id/btnSharpImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自定义锐化" />
+
+        <Button
+            android:id="@+id/btnDilateImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="膨胀" />
+
+        <Button
+            android:id="@+id/btnErodImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="腐蚀" />
+
+        <Button
+            android:id="@+id/btnThodImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="阈值化-二值" />
+
+        <Button
+            android:id="@+id/btnThodAdaImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自适应阈值化" />
+
+        <ImageView
+            android:id="@+id/imgOrigin"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter" />
+
+        <ImageView
+            android:id="@+id/imgProcess"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter" />
+    </LinearLayout>
+</ScrollView>
