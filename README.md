@@ -156,9 +156,9 @@ Utils.matToBitmap(src, processedImg);
 
 **配置**
 
-1. 参考博客【音视频开发01–AS3.x NDK开发环境搭建】建立支持ndk开发的项目。
+1. 参考博客【[音视频开发01–AS3.x NDK开发环境搭建](https://www.jianshu.com/p/f9e244211293)】建立支持ndk开发的项目。
 2. 完成【java库+native库】开发方式中的相关配置。
-3. 将native库头文件（sdk-native-jni-include）拷贝到src-main-cpp目录下（如果没有该目录，请先按照【音视频开发01–AS3.x NDK开发环境搭建】的过程进行操作）
+3. 将native库头文件（sdk-native-jni-include）拷贝到src-main-cpp目录下（如果没有该目录，请先按照【[音视频开发01–AS3.x NDK开发环境搭建](https://www.jianshu.com/p/f9e244211293)】的过程进行操作）
 4. 编辑 CMakeLists.txt 文件内容（如果没有该文件，请先按照【音视频开发01–AS3.x NDK开发环境搭建】的过程进行操作）
 5. 配置比较繁琐，如果出现问题，请积极搜索，学习android studio cmake ndk开发的相关知识。
 
