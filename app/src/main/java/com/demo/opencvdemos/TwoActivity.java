@@ -15,10 +15,10 @@ import org.opencv.imgproc.Imgproc;
 public class TwoActivity extends AppCompatActivity {
 
     private static final String TAG = "TwoActivity";
-    private static final int       VIEW_MODE_RGBA     = 0;
-    private static final int       VIEW_MODE_GRAY     = 1;
-    private static final int       VIEW_MODE_CANNY    = 2;
-    private static final int       VIEW_MODE_FEATURE    = 3;
+    private static final int VIEW_MODE_RGBA = 0;
+    private static final int VIEW_MODE_GRAY = 1;
+    private static final int VIEW_MODE_CANNY = 2;
+    private static final int VIEW_MODE_FEATURE = 3;
 
     private CameraBridgeViewBase cameraBridgeViewBase;
     private int viewMode = VIEW_MODE_GRAY;
@@ -89,7 +89,7 @@ public class TwoActivity extends AppCompatActivity {
 
             @Override
             public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
-                switch (viewMode){
+                switch (viewMode) {
                     case VIEW_MODE_GRAY:
                         Imgproc.cvtColor(inputFrame.gray(), matRgba, Imgproc.COLOR_GRAY2BGRA, 4);
                         break;
@@ -116,7 +116,7 @@ public class TwoActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (cameraBridgeViewBase != null){
+        if (cameraBridgeViewBase != null) {
             cameraBridgeViewBase.disableView();
         }
     }
@@ -124,7 +124,7 @@ public class TwoActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (cameraBridgeViewBase != null){
+        if (cameraBridgeViewBase != null) {
             cameraBridgeViewBase.disableView();
         }
     }
@@ -132,8 +132,6 @@ public class TwoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (OpenCVLoader.initDebug()){
-            cameraBridgeViewBase.enableView();
-        }
+        cameraBridgeViewBase.enableView();
     }
 }

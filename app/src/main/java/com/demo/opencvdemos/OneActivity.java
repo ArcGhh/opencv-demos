@@ -203,24 +203,4 @@ public class OneActivity extends AppCompatActivity {
             }
         }
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //使用本地opencv动态库，需要在工程中导入.so动态库，配置好加载路径
-        boolean initResult = OpenCVLoader.initDebug();
-        Log.d(TAG, "onResume: initResult=" + initResult);
-
-        //使用OpenCV Engine service，需要运行终端事先安装OpenCV Manager
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION, this, new BaseLoaderCallback(this) {
-            @Override
-            public void onManagerConnected(int status) {
-                if (status == LoaderCallbackInterface.SUCCESS) {
-                    Log.d(TAG, "onManagerConnected: success");
-                } else {
-                    super.onManagerConnected(status);
-                }
-            }
-        });
-    }
 }

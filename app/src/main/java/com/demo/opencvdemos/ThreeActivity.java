@@ -75,16 +75,14 @@ public class ThreeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (OpenCVLoader.initDebug()) {
-            myView.enableView();
-            myView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    savePicture();
-                    return false;
-                }
-            });
-        }
+        myView.enableView();
+        myView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                savePicture();
+                return false;
+            }
+        });
     }
 
     private void savePicture() {
@@ -124,10 +122,10 @@ public class ThreeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected: ");
-        if (item.getGroupId() == 1){
+        if (item.getGroupId() == 1) {
             myView.setEffect((String) item.getTitle());
             Toast.makeText(this, myView.getEffect(), Toast.LENGTH_SHORT).show();
-        }else if (item.getGroupId() == 2){
+        } else if (item.getGroupId() == 2) {
             int id = item.getItemId();
             Camera.Size resolution = resolutionList.get(id);
             myView.setResolution(resolution);

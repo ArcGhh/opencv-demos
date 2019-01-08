@@ -24,4 +24,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="three"/>
+
+    <Button
+        android:id="@+id/btnFour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="four"/>
 </LinearLayout>
