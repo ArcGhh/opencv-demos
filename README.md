@@ -11,14 +11,14 @@
 
 可以根据自己的工作平台下载对应的资源，本人实在android的领域下使用opencv，所以下载的是**3.4.5 Android pack**，后面的内容也是**针对opencv在android开发中的使用。**
 
-![opencv skd 版本](https://wangyt-imgs.oss-cn-beijing.aliyuncs.com/blog/opencv-sdk-release.png)
+![opencv skd 版本](https://wangyt-imgs.oss-cn-beijing.aliyuncs.com/blog/opencv-sdk-android-studio%E9%9B%86%E6%88%90/opencv-sdk-release.png)
 
 
 ## 2、sdk结构 
 
 下载解压后的文件结构如下
 
-![opencv sdk 文件结构](https://wangyt-imgs.oss-cn-beijing.aliyuncs.com/blog/opencv-sdk-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84.png)
+![opencv sdk 文件结构](https://wangyt-imgs.oss-cn-beijing.aliyuncs.com/blog/opencv-sdk-android-studio%E9%9B%86%E6%88%90/opencv-sdk-%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84.png)
 
 * apk：这个包下面是opencv-manager安装包，具体作用后面在细说。
 * samples：是opencv官方提供的几个demo工程，有工程源代码，也有打包好的apk。
