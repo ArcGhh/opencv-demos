@@ -1,18 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".FourActivity">
-    <Button
-        android:id="@+id/btnLoadImg"
+    android:layout_height="match_parent">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="选择图片" />
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</LinearLayout>
+        android:orientation="vertical"
+        tools:context=".FourActivity">
+
+        <Button
+            android:id="@+id/btnLoadImg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择图片" />
+
+        <Button
+            android:id="@+id/btnDog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="高斯差分边缘检测" />
+
+        <Button
+            android:id="@+id/btnCanny"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Canny边缘检测" />
+
+        <Button
+            android:id="@+id/btnSobel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sobel边缘检测" />
+
+        <Button
+            android:id="@+id/btnHarris"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Harris角点检测" />
+
+        <Button
+            android:id="@+id/btnHoughLineP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="概率霍夫曼线" />
+
+        <Button
+            android:id="@+id/btnHoughCircle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="概率霍夫曼圆" />
+
+        <Button
+            android:id="@+id/btnContour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="轮廓" />
+
+        <ImageView
+            android:id="@+id/imgView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <ImageView
+            android:id="@+id/imgDoG"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+    </LinearLayout>
+</ScrollView>
