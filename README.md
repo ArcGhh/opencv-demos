@@ -144,7 +144,14 @@ Utils.matToBitmap(src, processedImg);
 
 **开发**
 
-和【java库+opencv-manager.apk】开发方式一样。
+和【java库+opencv-manager.apk】开发方式初始化opencv的时候有区别，其他都一样。
+
+在 Activity 的 onResume 方法中初始化opencv
+
+```java
+        //使用应用本地native库
+        OpenCVLoader.initDebug();
+```
 
 **3、java库+native库+自行封装实现的jni方法**
 
