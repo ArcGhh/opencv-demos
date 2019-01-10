@@ -204,7 +204,7 @@ target_link_libraries( # Specifies the target library.
 
 **开发**
 
-看demo吧，就是jni开发那一套。
+看[demo](https://github.com/WangYantao/opencv-demos)吧，就是jni开发那一套。
 
 ## 总结
 
