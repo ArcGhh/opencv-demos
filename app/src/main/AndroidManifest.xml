@@ -20,10 +20,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OneActivity" />
+        <activity android:name=".ImgFilterActivity" />
         <activity android:name=".TwoActivity" />
         <activity android:name=".ThreeActivity" />
-        <activity android:name=".FourActivity"></activity>
+        <activity android:name=".FourActivity" />
+        <activity android:name=".MatActivity" />
+        <activity android:name=".imgfliter.blur.BlurActivity" />
+        <activity android:name=".imgfliter.morphology.MorphologyActivity"></activity>
     </application>
 
 </manifest>

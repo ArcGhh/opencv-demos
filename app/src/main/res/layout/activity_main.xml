@@ -8,6 +8,24 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/btnBlur"
+        android:text="图像模糊"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnMorphology"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="形态学变换"/>
+
+    <Button
+        android:id="@+id/btnMat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="mat"/>
+
+    <Button
         android:id="@+id/btnOne"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
