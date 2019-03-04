@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.demo.opencvdemos.R;
 
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Size;
@@ -22,16 +23,20 @@ import org.opencv.imgproc.Imgproc;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MorphologyActivity extends AppCompatActivity implements View.OnClickListener{
+public class MorphologyActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MorphologyActivity";
     private static final int REQ_CODE_PICK_IMG = 1;
 
     Button btnLoadImg, btnDilate, btnErode, btnMorphologyEx,
-            btnMorphologyHitOrMiss;
+            btnMorphologyHitOrMiss, btnMorphologyExtHorLine,
+            btnMorphologyExtVerLine;
     ImageView imgSrc, imgDst;
 
     Mat src;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +47,8 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
         btnErode = findViewById(R.id.btnErode);
         btnMorphologyEx = findViewById(R.id.btnMorphologyEx);
         btnMorphologyHitOrMiss = findViewById(R.id.btnMorphologyHitOrMiss);
+        btnMorphologyExtHorLine = findViewById(R.id.btnMorphologyExtHorLine);
+        btnMorphologyExtVerLine = findViewById(R.id.btnMorphologyExtVerLine);
 
         btnLoadImg.setOnClickListener(this);
         btnDilate.setOnClickListener(this);
@@ -55,14 +62,28 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
+        btnMorphologyExtHorLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                extHorLine();
+            }
+        });
+
+        btnMorphologyExtVerLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                extVerLine();
+            }
+        });
+
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
     }
 
     private void hitMiss() {
-        Mat input_image = new Mat( 8, 8, CvType.CV_8UC1 );
+        Mat input_image = new Mat(8, 8, CvType.CV_8UC1);
         int row = 0, col = 0;
-        input_image.put(row ,col,
+        input_image.put(row, col,
                 0, 0, 0, 0, 0, 0, 0, 0,
                 0, 255, 255, 255, 0, 0, 0, 255,
                 0, 255, 255, 255, 0, 0, 0, 0,
@@ -72,11 +93,11 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
                 0, 255, 0, 255, 0, 0, 255, 0,
                 0, 255, 255, 255, 0, 0, 0, 0);
 
-        Mat kernel = new Mat( 3, 3, CvType.CV_16S );
-        kernel.put(row ,col,
+        Mat kernel = new Mat(3, 3, CvType.CV_16S);
+        kernel.put(row, col,
                 0, 1, 0,
                 1, -1, 1,
-                0, 1, 0 );
+                0, 1, 0);
 
         Mat output_image = new Mat();
         Imgproc.morphologyEx(input_image, output_image, Imgproc.MORPH_HITMISS, kernel);
@@ -87,12 +108,12 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
 
     public void onClick(View v) {
         //图像处理之前需要先加载图片
-        if (v.getId() != R.id.btnLoadImg && src == null){
+        if (v.getId() != R.id.btnLoadImg && src == null) {
             Toast.makeText(MorphologyActivity.this, "请先加载图片", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (v.getId() == R.id.btnLoadImg){
+        if (v.getId() == R.id.btnLoadImg) {
             //加载图片
             loadImg();
             return;
@@ -101,7 +122,7 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
         //初始化输出图像mat
         Mat dst = new Mat(src.rows(), src.cols(), CvType.CV_8UC3);
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btnDilate:
                 //创建kernel
                 Mat dilateKernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
@@ -124,6 +145,77 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
 
         //显示输出图像
         showDst(dst);
+    }
+
+    private void extHorLine() {
+        if (src == null) {
+            Toast.makeText(MorphologyActivity.this, "请先加载图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //灰度化图像
+        Mat gray = new Mat();
+        if (src.channels() == 3) {
+            Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        } else {
+            gray = src;
+        }
+        //分离通道
+        List<Mat> channelMat = new ArrayList<>();
+        Core.split(gray, channelMat);
+        //取某一通道作为1-通道灰度图像
+        Mat graySingle = channelMat.get(0);
+        //二值化图像
+        Mat binary = new Mat();
+        Core.bitwise_not(graySingle, graySingle);
+        Imgproc.adaptiveThreshold(graySingle, binary, 255,
+                Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,
+                15, -2);
+        //提取横线
+        Mat horizontal = binary.clone();//待提取横线图像
+        int horizontalSize = horizontal.cols() / 30;//横线尺寸阈值
+        Mat horizontalStructure =
+                Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
+                        new Size(horizontalSize, 1));//结构元素
+        Imgproc.erode(horizontal, horizontal, horizontalStructure);//腐蚀
+        Imgproc.dilate(horizontal, horizontal, horizontalStructure);//膨胀
+        //显示提取结果
+        showImg(horizontal, imgDst);
+    }
+
+
+    private void extVerLine() {
+        if (src == null) {
+            Toast.makeText(MorphologyActivity.this, "请先加载图片", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //灰度化图像
+        Mat gray = new Mat();
+        if (src.channels() == 3) {
+            Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        } else {
+            gray = src;
+        }
+        //分离通道
+        List<Mat> channelMat = new ArrayList<>();
+        Core.split(gray, channelMat);
+        //取某一通道作为1-通道灰度图像
+        Mat graySingle = channelMat.get(0);
+        //二值化图像
+        Mat binary = new Mat();
+        Core.bitwise_not(graySingle, graySingle);
+        Imgproc.adaptiveThreshold(graySingle, binary, 255,
+                Imgproc.ADAPTIVE_THRESH_MEAN_C, Imgproc.THRESH_BINARY,
+                15, -2);
+        //提取竖线
+        Mat vertical = binary.clone();//待提取竖线图像
+        int verticalSize = vertical.rows() / 30;//竖线尺寸阈值
+        Mat verticalStructure =
+                Imgproc.getStructuringElement(Imgproc.MORPH_RECT,
+                        new Size(1, verticalSize));//结构元素
+        Imgproc.erode(vertical, vertical, verticalStructure);//腐蚀
+        Imgproc.dilate(vertical, vertical, verticalStructure);//膨胀
+        //显示提取结果
+        showImg(vertical, imgDst);
     }
 
     private void loadImg() {
