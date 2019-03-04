@@ -26,6 +26,12 @@
         android:text="形态学变换"/>
 
     <Button
+        android:id="@+id/btnPyramid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="影像金字塔"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

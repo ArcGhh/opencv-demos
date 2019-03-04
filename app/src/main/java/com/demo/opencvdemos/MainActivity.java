@@ -10,13 +10,15 @@ import android.widget.Button;
 import com.demo.opencvdemos.imgproc.blur.BlurActivity;
 import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
+import com.demo.opencvdemos.imgproc.pyramid.PyramidActivity;
 
 import org.opencv.android.OpenCVLoader;
 
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
 
-    Button btnDraw, btnBlur, btnMorphology, btnMat, btnOne, btnTwo, btnThree, btnFour;
+    Button btnDraw, btnBlur, btnMorphology, btnPyramid,
+            btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +27,7 @@ public class MainActivity extends AppCompatActivity{
         btnDraw = findViewById(R.id.btnDraw);
         btnBlur = findViewById(R.id.btnBlur);
         btnMorphology = findViewById(R.id.btnMorphology);
+        btnPyramid = findViewById(R.id.btnPyramid);
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
         btnTwo = findViewById(R.id.btnTwo);
@@ -49,6 +52,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, MorphologyActivity.class));
+            }
+        });
+
+        btnPyramid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, PyramidActivity.class));
             }
         });
 
