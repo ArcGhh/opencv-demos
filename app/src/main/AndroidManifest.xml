@@ -29,7 +29,8 @@
         <activity android:name=".imgproc.morphology.MorphologyActivity" />
         <activity android:name=".imgproc.draw.DrawActivity" />
         <activity android:name=".imgproc.pyramid.PyramidActivity" />
-        <activity android:name=".imgproc.threshold.ThresholdActivity"></activity>
+        <activity android:name=".imgproc.threshold.ThresholdActivity" />
+        <activity android:name=".imgproc.border.BorderActivity"></activity>
     </application>
 
 </manifest>

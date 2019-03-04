@@ -38,6 +38,12 @@
         android:text="基本阈值操作"/>
 
     <Button
+        android:id="@+id/btnBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="图像边框"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

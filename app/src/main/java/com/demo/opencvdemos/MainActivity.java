@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.demo.opencvdemos.imgproc.blur.BlurActivity;
+import com.demo.opencvdemos.imgproc.border.BorderActivity;
 import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 import com.demo.opencvdemos.imgproc.pyramid.PyramidActivity;
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
 
     Button btnDraw, btnBlur, btnMorphology, btnPyramid,
-            btnThreshold,
+            btnThreshold, btnBorder,
             btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity{
         btnMorphology = findViewById(R.id.btnMorphology);
         btnPyramid = findViewById(R.id.btnPyramid);
         btnThreshold = findViewById(R.id.btnThreshold);
+        btnBorder = findViewById(R.id.btnBorder);
 
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
@@ -70,6 +72,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ThresholdActivity.class));
+            }
+        });
+
+        btnBorder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, BorderActivity.class));
             }
         });
 
