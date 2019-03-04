@@ -1,4 +1,4 @@
-package com.demo.opencvdemos.imgfliter.blur;
+package com.demo.opencvdemos.imgproc.morphology;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,45 +23,37 @@ import org.opencv.imgproc.Imgproc;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-public class BlurActivity extends AppCompatActivity implements View.OnClickListener{
-    private static final String TAG = "BlurActivity";
+public class MorphologyActivity extends AppCompatActivity implements View.OnClickListener{
+    private static final String TAG = "MorphologyActivity";
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg,btnBlur,btnBilateralFilter,btnBoxFilter,
-            btnGaussianBlur,btnMedianBlur, btnSqrBoxFilter;
+    Button btnLoadImg, btnDilate, btnErode, btnMorphologyEx;
     ImageView imgSrc, imgDst;
 
     Mat src;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_blur);
+        setContentView(R.layout.activity_morphology);
 
         btnLoadImg = findViewById(R.id.btnLoadImg);
-        btnBlur = findViewById(R.id.btnBlur);
-        btnBilateralFilter = findViewById(R.id.btnBilateralFilter);
-        btnBoxFilter = findViewById(R.id.btnBoxFilter);
-        btnGaussianBlur = findViewById(R.id.btnGaussianBlur);
-        btnMedianBlur = findViewById(R.id.btnMedianBlur);
-        btnSqrBoxFilter = findViewById(R.id.btnSqrBoxFilter);
+        btnDilate = findViewById(R.id.btnDilate);
+        btnErode = findViewById(R.id.btnErode);
+        btnMorphologyEx = findViewById(R.id.btnMorphologyEx);
 
         btnLoadImg.setOnClickListener(this);
-        btnBlur.setOnClickListener(this);
-        btnBilateralFilter.setOnClickListener(this);
-        btnBoxFilter.setOnClickListener(this);
-        btnGaussianBlur.setOnClickListener(this);
-        btnMedianBlur.setOnClickListener(this);
-        btnSqrBoxFilter.setOnClickListener(this);
+        btnDilate.setOnClickListener(this);
+        btnErode.setOnClickListener(this);
+        btnMorphologyEx.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
     }
 
-    @Override
     public void onClick(View v) {
         //图像处理之前需要先加载图片
         if (v.getId() != R.id.btnLoadImg && src == null){
-            Toast.makeText(BlurActivity.this, "请先加载图片", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MorphologyActivity.this, "请先加载图片", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -76,34 +67,23 @@ public class BlurActivity extends AppCompatActivity implements View.OnClickListe
         Mat dst = new Mat(src.rows(), src.cols(), CvType.CV_8UC3);
 
         switch (v.getId()){
-            case R.id.btnBlur:
-                //blur 均值模糊
-                Imgproc.blur(src, dst, new Size(3, 3));
+            case R.id.btnDilate:
+                //创建kernel
+                Mat dilateKernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
+                //膨胀图像
+                Imgproc.dilate(src, dst, dilateKernel);
                 break;
-            case R.id.btnBilateralFilter:
-                Log.d(TAG, "onClick: " + (src.type() == CvType.CV_8UC1 || src.type() == CvType.CV_8UC3));
-                /**
-                 * bilateralFilter 双边模糊
-                 * 需要src和dst都是一通道或者三通道，但是bitmap转mat的方法默认输出4通道，
-                 * 所以需要转换，这里先跳过，后续解决双边模糊。
-                 */
-                //Imgproc.bilateralFilter(src, dst, 5, 130, 130);
+            case R.id.btnErode:
+                //创建kernel
+                Mat erodeKernel = Imgproc.getStructuringElement(Imgproc.MORPH_ELLIPSE, new Size(5, 5));
+                //腐蚀图像
+                Imgproc.erode(src, dst, erodeKernel);
                 break;
-            case R.id.btnBoxFilter:
-                //BoxFilter 箱式滤波模糊
-                Imgproc.boxFilter(src, dst, -1, new Size(3, 3));
-                break;
-            case  R.id.btnGaussianBlur:
-                //GaussianBlur 高斯模糊
-                Imgproc.GaussianBlur(src, dst, new Size(3, 3), 0);
-                break;
-            case R.id.btnMedianBlur:
-                //MedianBlur 中值模糊
-                Imgproc.medianBlur(src, dst, 3);
-                break;
-            case R.id.btnSqrBoxFilter:
-                //SqrBoxFilter
-                Imgproc.sqrBoxFilter(src, dst, CvType.CV_8U, new Size(3, 3));
+            case R.id.btnMorphologyEx:
+                //创建kernel
+                Mat openKernel = Imgproc.getStructuringElement(Imgproc.MORPH_OPEN, new Size(15, 15));
+                //形态学-开运算
+                Imgproc.morphologyEx(src, dst, Imgproc.MORPH_OPEN, openKernel);
                 break;
         }
 

@@ -25,8 +25,8 @@
         <activity android:name=".ThreeActivity" />
         <activity android:name=".FourActivity" />
         <activity android:name=".MatActivity" />
-        <activity android:name=".imgfliter.blur.BlurActivity" />
-        <activity android:name=".imgfliter.morphology.MorphologyActivity"></activity>
+        <activity android:name=".imgproc.blur.BlurActivity" />
+        <activity android:name=".imgproc.morphology.MorphologyActivity"></activity>
     </application>
 
 </manifest>

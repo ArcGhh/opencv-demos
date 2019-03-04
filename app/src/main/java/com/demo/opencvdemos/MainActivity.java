@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import com.demo.opencvdemos.imgfliter.blur.BlurActivity;
-import com.demo.opencvdemos.imgfliter.morphology.MorphologyActivity;
+import com.demo.opencvdemos.imgproc.blur.BlurActivity;
+import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 
 import org.opencv.android.OpenCVLoader;
 
