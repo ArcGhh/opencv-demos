@@ -16,8 +16,11 @@ import android.widget.Toast;
 import com.demo.opencvdemos.R;
 
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -29,7 +32,8 @@ public class BlurActivity extends AppCompatActivity implements View.OnClickListe
     private static final int REQ_CODE_PICK_IMG = 1;
 
     Button btnLoadImg,btnBlur,btnBilateralFilter,btnBoxFilter,
-            btnGaussianBlur,btnMedianBlur, btnSqrBoxFilter;
+            btnGaussianBlur,btnMedianBlur, btnSqrBoxFilter,
+            btnCustomFilter;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -45,6 +49,7 @@ public class BlurActivity extends AppCompatActivity implements View.OnClickListe
         btnGaussianBlur = findViewById(R.id.btnGaussianBlur);
         btnMedianBlur = findViewById(R.id.btnMedianBlur);
         btnSqrBoxFilter = findViewById(R.id.btnSqrBoxFilter);
+        btnCustomFilter = findViewById(R.id.btnCustomFilter);
 
         btnLoadImg.setOnClickListener(this);
         btnBlur.setOnClickListener(this);
@@ -53,6 +58,7 @@ public class BlurActivity extends AppCompatActivity implements View.OnClickListe
         btnGaussianBlur.setOnClickListener(this);
         btnMedianBlur.setOnClickListener(this);
         btnSqrBoxFilter.setOnClickListener(this);
+        btnCustomFilter.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -104,6 +110,13 @@ public class BlurActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnSqrBoxFilter:
                 //SqrBoxFilter
                 Imgproc.sqrBoxFilter(src, dst, CvType.CV_8U, new Size(3, 3));
+                break;
+            case R.id.btnCustomFilter:
+                Mat kernel = new Mat();
+                int kernelSize = 6;
+                Mat ones = Mat.ones( kernelSize, kernelSize, CvType.CV_32F );
+                Core.multiply(ones, new Scalar(1/(double)(kernelSize*kernelSize)), kernel);
+                Imgproc.filter2D(src, dst, -1 , kernel, new Point(-1,-1), 0, Core.BORDER_DEFAULT);
                 break;
         }
 
