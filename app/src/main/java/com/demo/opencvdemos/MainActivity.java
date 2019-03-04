@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.demo.opencvdemos.imgproc.blur.BlurActivity;
+import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 
 import org.opencv.android.OpenCVLoader;
@@ -15,12 +16,13 @@ import org.opencv.android.OpenCVLoader;
 public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
 
-    Button btnBlur, btnMorphology, btnMat, btnOne, btnTwo, btnThree, btnFour;
+    Button btnDraw, btnBlur, btnMorphology, btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        btnDraw = findViewById(R.id.btnDraw);
         btnBlur = findViewById(R.id.btnBlur);
         btnMorphology = findViewById(R.id.btnMorphology);
         btnMat = findViewById(R.id.btnMat);
@@ -28,6 +30,13 @@ public class MainActivity extends AppCompatActivity{
         btnTwo = findViewById(R.id.btnTwo);
         btnThree = findViewById(R.id.btnThree);
         btnFour = findViewById(R.id.btnFour);
+
+        btnDraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, DrawActivity.class));
+            }
+        });
 
         btnBlur.setOnClickListener(new View.OnClickListener() {
             @Override

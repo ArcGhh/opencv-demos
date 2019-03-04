@@ -26,7 +26,8 @@
         <activity android:name=".FourActivity" />
         <activity android:name=".MatActivity" />
         <activity android:name=".imgproc.blur.BlurActivity" />
-        <activity android:name=".imgproc.morphology.MorphologyActivity"></activity>
+        <activity android:name=".imgproc.morphology.MorphologyActivity" />
+        <activity android:name=".imgproc.draw.DrawActivity"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".imgproc.draw.DrawActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnDrawLine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画线"/>
+
+            <Button
+                android:id="@+id/btnDrawEllipse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画椭圆"/>
+
+            <Button
+                android:id="@+id/btnDrawCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画圆"/>
+
+            <Button
+                android:id="@+id/btnDrawPolygon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画多边形"/>
+
+            <Button
+                android:id="@+id/btnDrawRect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="画矩形"/>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgDst"
+            android:layout_width="match_parent"
+            android:layout_height="300dp" />
+    </LinearLayout>
+</ScrollView>
