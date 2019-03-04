@@ -27,7 +27,8 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
     private static final String TAG = "MorphologyActivity";
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnDilate, btnErode, btnMorphologyEx;
+    Button btnLoadImg, btnDilate, btnErode, btnMorphologyEx,
+            btnMorphologyHitOrMiss;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -40,14 +41,48 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
         btnDilate = findViewById(R.id.btnDilate);
         btnErode = findViewById(R.id.btnErode);
         btnMorphologyEx = findViewById(R.id.btnMorphologyEx);
+        btnMorphologyHitOrMiss = findViewById(R.id.btnMorphologyHitOrMiss);
 
         btnLoadImg.setOnClickListener(this);
         btnDilate.setOnClickListener(this);
         btnErode.setOnClickListener(this);
         btnMorphologyEx.setOnClickListener(this);
 
+        btnMorphologyHitOrMiss.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hitMiss();
+            }
+        });
+
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
+    }
+
+    private void hitMiss() {
+        Mat input_image = new Mat( 8, 8, CvType.CV_8UC1 );
+        int row = 0, col = 0;
+        input_image.put(row ,col,
+                0, 0, 0, 0, 0, 0, 0, 0,
+                0, 255, 255, 255, 0, 0, 0, 255,
+                0, 255, 255, 255, 0, 0, 0, 0,
+                0, 255, 255, 255, 0, 255, 0, 0,
+                0, 0, 255, 0, 0, 0, 0, 0,
+                0, 0, 255, 0, 0, 255, 255, 0,
+                0, 255, 0, 255, 0, 0, 255, 0,
+                0, 255, 255, 255, 0, 0, 0, 0);
+
+        Mat kernel = new Mat( 3, 3, CvType.CV_16S );
+        kernel.put(row ,col,
+                0, 1, 0,
+                1, -1, 1,
+                0, 1, 0 );
+
+        Mat output_image = new Mat();
+        Imgproc.morphologyEx(input_image, output_image, Imgproc.MORPH_HITMISS, kernel);
+
+        showImg(input_image, imgSrc);
+        showDst(output_image);
     }
 
     public void onClick(View v) {
@@ -121,8 +156,12 @@ public class MorphologyActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void showDst(Mat dst) {
+        showImg(dst, imgDst);
+    }
+
+    private void showImg(Mat dst, ImageView imgView) {
         Bitmap processedImg = Bitmap.createBitmap(dst.cols(), dst.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(dst, processedImg);
-        imgDst.setImageBitmap(processedImg);
+        imgView.setImageBitmap(processedImg);
     }
 }
