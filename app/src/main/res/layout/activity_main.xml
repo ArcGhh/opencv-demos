@@ -32,6 +32,12 @@
         android:text="影像金字塔"/>
 
     <Button
+        android:id="@+id/btnThreshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="基本阈值操作"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

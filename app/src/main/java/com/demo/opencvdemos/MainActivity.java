@@ -11,6 +11,7 @@ import com.demo.opencvdemos.imgproc.blur.BlurActivity;
 import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 import com.demo.opencvdemos.imgproc.pyramid.PyramidActivity;
+import com.demo.opencvdemos.imgproc.threshold.ThresholdActivity;
 
 import org.opencv.android.OpenCVLoader;
 
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity{
     private static final String TAG = "MainActivity";
 
     Button btnDraw, btnBlur, btnMorphology, btnPyramid,
+            btnThreshold,
             btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity{
         btnBlur = findViewById(R.id.btnBlur);
         btnMorphology = findViewById(R.id.btnMorphology);
         btnPyramid = findViewById(R.id.btnPyramid);
+        btnThreshold = findViewById(R.id.btnThreshold);
+
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
         btnTwo = findViewById(R.id.btnTwo);
@@ -59,6 +63,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, PyramidActivity.class));
+            }
+        });
+
+        btnThreshold.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ThresholdActivity.class));
             }
         });
 
