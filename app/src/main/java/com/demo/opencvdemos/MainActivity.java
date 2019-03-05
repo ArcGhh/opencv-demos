@@ -14,6 +14,7 @@ import com.demo.opencvdemos.imgproc.edge.EdgeActivity;
 import com.demo.opencvdemos.imgproc.hough.HoughActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 import com.demo.opencvdemos.imgproc.pyramid.PyramidActivity;
+import com.demo.opencvdemos.imgproc.remap.RemapActivity;
 import com.demo.opencvdemos.imgproc.threshold.ThresholdActivity;
 
 import org.opencv.android.OpenCVLoader;
@@ -23,6 +24,7 @@ public class MainActivity extends AppCompatActivity{
 
     Button btnDraw, btnBlur, btnMorphology, btnPyramid,
             btnThreshold, btnBorder, btnEdge, btnHough,
+            btnRemap,
             btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
         btnBorder = findViewById(R.id.btnBorder);
         btnEdge = findViewById(R.id.btnEdge);
         btnHough = findViewById(R.id.btnHough);
+        btnRemap = findViewById(R.id.btnRemap);
 
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
@@ -97,6 +100,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, HoughActivity.class));
+            }
+        });
+
+        btnRemap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, RemapActivity.class));
             }
         });
 

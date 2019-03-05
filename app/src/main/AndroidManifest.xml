@@ -33,6 +33,7 @@
         <activity android:name=".imgproc.border.BorderActivity" />
         <activity android:name=".imgproc.edge.EdgeActivity" />
         <activity android:name=".imgproc.hough.HoughActivity" />
+        <activity android:name=".imgproc.remap.RemapActivity"></activity>
     </application>
 
 </manifest>

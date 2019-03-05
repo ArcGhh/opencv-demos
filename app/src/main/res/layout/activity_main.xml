@@ -56,6 +56,12 @@
         android:text="霍夫线/圆变换"/>
 
     <Button
+        android:id="@+id/btnRemap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="重映射"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
