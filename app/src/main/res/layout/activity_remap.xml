@@ -29,6 +29,12 @@
                 android:layout_height="wrap_content"
                 android:text="重映射" />
 
+            <Button
+                android:id="@+id/btnAffine"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="仿射变换" />
+
         </LinearLayout>
 
         <ImageView

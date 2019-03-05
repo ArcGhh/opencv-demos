@@ -59,7 +59,7 @@
         android:id="@+id/btnRemap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="重映射"/>
+        android:text="重映射/仿射变换"/>
 
     <Button
         android:id="@+id/btnMat"

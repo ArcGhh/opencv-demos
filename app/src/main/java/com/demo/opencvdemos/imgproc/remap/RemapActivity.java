@@ -18,6 +18,8 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
@@ -27,7 +29,7 @@ import java.io.InputStream;
 public class RemapActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnRemap;
+    Button btnLoadImg, btnRemap, btnAffine;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -39,9 +41,11 @@ public class RemapActivity extends AppCompatActivity implements View.OnClickList
 
         btnLoadImg = findViewById(R.id.btnLoadImg);
         btnRemap = findViewById(R.id.btnRemap);
+        btnAffine = findViewById(R.id.btnAffine);
 
         btnLoadImg.setOnClickListener(this);
         btnRemap.setOnClickListener(this);
+        btnAffine.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -66,6 +70,9 @@ public class RemapActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.btnRemap:
                 dst= remap();
+                break;
+            case R.id.btnAffine:
+                dst = affine();
                 break;
         }
 
@@ -94,6 +101,32 @@ public class RemapActivity extends AppCompatActivity implements View.OnClickList
         Imgproc.remap(src, remapMat, mapX, mapY, Imgproc.INTER_LINEAR);
 
         return remapMat;
+    }
+
+    private Mat affine(){
+        Point[] srcTri = new Point[3];
+        srcTri[0] = new Point( 0, 0 );
+        srcTri[1] = new Point( src.cols() - 1, 0 );
+        srcTri[2] = new Point( 0, src.rows() - 1 );
+
+        Point[] dstTri = new Point[3];
+        dstTri[0] = new Point( 0, src.rows()*0.33 );
+        dstTri[1] = new Point( src.cols()*0.85, src.rows()*0.25 );
+        dstTri[2] = new Point( src.cols()*0.15, src.rows()*0.7 );
+
+        Mat warpMat = Imgproc.getAffineTransform( new MatOfPoint2f(srcTri), new MatOfPoint2f(dstTri) );
+        Mat warpDst = Mat.zeros( src.rows(), src.cols(), src.type() );
+        Imgproc.warpAffine( src, warpDst, warpMat, warpDst.size() );
+
+        Point center = new Point(warpDst.cols() / 2, warpDst.rows() / 2);
+        double angle = -50.0;
+        double scale = 0.6;
+
+        Mat rotMat = Imgproc.getRotationMatrix2D( center, angle, scale );
+        Mat warpRotateDst = new Mat();
+        Imgproc.warpAffine( warpDst, warpRotateDst, rotMat, warpDst.size() );
+
+        return warpRotateDst;
     }
 
     private void loadImg() {
