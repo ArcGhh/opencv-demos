@@ -31,7 +31,8 @@
         <activity android:name=".imgproc.pyramid.PyramidActivity" />
         <activity android:name=".imgproc.threshold.ThresholdActivity" />
         <activity android:name=".imgproc.border.BorderActivity" />
-        <activity android:name=".imgproc.edge.EdgeActivity"></activity>
+        <activity android:name=".imgproc.edge.EdgeActivity" />
+        <activity android:name=".imgproc.hough.HoughActivity" />
     </application>
 
 </manifest>

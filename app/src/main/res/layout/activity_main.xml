@@ -50,6 +50,12 @@
         android:text="边缘检测"/>
 
     <Button
+        android:id="@+id/btnHough"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="霍夫线/圆变换"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
