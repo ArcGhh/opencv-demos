@@ -44,6 +44,12 @@
         android:text="图像边框"/>
 
     <Button
+        android:id="@+id/btnEdge"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="边缘检测"/>
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
