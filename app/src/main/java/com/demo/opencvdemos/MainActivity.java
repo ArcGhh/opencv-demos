@@ -11,6 +11,7 @@ import com.demo.opencvdemos.imgproc.blur.BlurActivity;
 import com.demo.opencvdemos.imgproc.border.BorderActivity;
 import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.edge.EdgeActivity;
+import com.demo.opencvdemos.imgproc.hist.HistActivity;
 import com.demo.opencvdemos.imgproc.hough.HoughActivity;
 import com.demo.opencvdemos.imgproc.morphology.MorphologyActivity;
 import com.demo.opencvdemos.imgproc.pyramid.PyramidActivity;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity{
 
     Button btnDraw, btnBlur, btnMorphology, btnPyramid,
             btnThreshold, btnBorder, btnEdge, btnHough,
-            btnRemap,
+            btnRemap, btnHist,
             btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity{
         btnEdge = findViewById(R.id.btnEdge);
         btnHough = findViewById(R.id.btnHough);
         btnRemap = findViewById(R.id.btnRemap);
+        btnHist = findViewById(R.id.btnHist);
 
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
@@ -107,6 +109,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, RemapActivity.class));
+            }
+        });
+
+        btnHist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, HistActivity.class));
             }
         });
 

@@ -62,6 +62,12 @@
         android:text="重映射/仿射变换"/>
 
     <Button
+        android:id="@+id/btnHist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="直方图" />
+
+    <Button
         android:id="@+id/btnMat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
