@@ -37,7 +37,7 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "HistActivity";
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnHistEqu, btnHistCal, btnHistComp;
+    Button btnLoadImg, btnHistEqu, btnHistCal, btnHistComp, btnBackProjection;
     ImageView imgSrc, imgDst, imgSrc1, imgSrc2;
     TextView txvMsg;
 
@@ -54,11 +54,13 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         btnHistEqu = findViewById(R.id.btnHistEqu);
         btnHistCal = findViewById(R.id.btnHistCal);
         btnHistComp = findViewById(R.id.btnHistComp);
+        btnBackProjection = findViewById(R.id.btnBackProjection);
 
         btnLoadImg.setOnClickListener(this);
         btnHistEqu.setOnClickListener(this);
         btnHistCal.setOnClickListener(this);
         btnHistComp.setOnClickListener(this);
+        btnBackProjection.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgSrc1 = findViewById(R.id.imgSrc1);
@@ -98,9 +100,9 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
                 dst = histCalculation();
                 break;
             case R.id.btnHistComp:
-                if (src1 == null || src2 == null){
+                if (src1 == null || src2 == null) {
                     showMoreView();
-                }else {
+                } else {
                     histComparison();
                 }
                 break;
@@ -112,20 +114,24 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
                 srcIndex = 2;
                 loadImg();
                 break;
+            case R.id.btnBackProjection:
+                showLessView();
+                dst = backProjection();
+                break;
         }
 
         //显示输出图像
         showDst(dst);
     }
 
-    private void showMoreView(){
+    private void showMoreView() {
         imgDst.setVisibility(View.GONE);
         imgSrc1.setVisibility(View.VISIBLE);
         imgSrc2.setVisibility(View.VISIBLE);
         txvMsg.setVisibility(View.VISIBLE);
     }
 
-    private void showLessView(){
+    private void showLessView() {
         imgDst.setVisibility(View.VISIBLE);
         imgSrc1.setVisibility(View.GONE);
         imgSrc2.setVisibility(View.GONE);
@@ -185,20 +191,20 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         return histImage;
     }
 
-    private void histComparison(){
+    private void histComparison() {
         //hsv变换
         Mat hsvBase = new Mat(), hsvTest1 = new Mat(), hsvTest2 = new Mat();
         Imgproc.cvtColor(src, hsvBase, Imgproc.COLOR_BGR2HSV);
         Imgproc.cvtColor(src1, hsvTest1, Imgproc.COLOR_BGR2HSV);
         Imgproc.cvtColor(src2, hsvTest2, Imgproc.COLOR_BGR2HSV);
         //创建一个src一半的hsv图像
-        Mat hsvHalfDown = hsvBase.submat(new Range(hsvBase.rows()/2, hsvBase.rows()-1),
-                new Range(0, hsvBase.cols()-1));
+        Mat hsvHalfDown = hsvBase.submat(new Range(hsvBase.rows() / 2, hsvBase.rows() - 1),
+                new Range(0, hsvBase.cols() - 1));
         //初始化直方图计算参数
         int hBins = 50, sBins = 60;
         int[] histSize = {hBins, sBins};
-        float[] ranges = {0,180,0,256};// 色调：from 0 to 179, 饱和度： from 0 to 255
-        int[] channels = {0,1};//使用第0和第1通道
+        float[] ranges = {0, 180, 0, 256};// 色调：from 0 to 179, 饱和度： from 0 to 255
+        int[] channels = {0, 1};//使用第0和第1通道
         //计算直方图
         Mat histBase = new Mat(), histHalfDown = new Mat(), histTest1 = new Mat(), histTest2 = new Mat();
         List<Mat> hsvBaseList = Arrays.asList(hsvBase);
@@ -215,17 +221,41 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         Core.normalize(histTest2, histTest2, 0, 1, Core.NORM_MINMAX);
         //输出对比结果
         StringBuilder stringBuilder = new StringBuilder();
-        for( int compareMethod = 0; compareMethod < 4; compareMethod++ ) {
-            double baseBase = Imgproc.compareHist( histBase, histBase, compareMethod );
-            double baseHalf = Imgproc.compareHist( histBase, histHalfDown, compareMethod );
-            double baseTest1 = Imgproc.compareHist( histBase, histTest1, compareMethod );
-            double baseTest2 = Imgproc.compareHist( histBase, histTest2, compareMethod );
+        for (int compareMethod = 0; compareMethod < 4; compareMethod++) {
+            double baseBase = Imgproc.compareHist(histBase, histBase, compareMethod);
+            double baseHalf = Imgproc.compareHist(histBase, histHalfDown, compareMethod);
+            double baseTest1 = Imgproc.compareHist(histBase, histTest1, compareMethod);
+            double baseTest2 = Imgproc.compareHist(histBase, histTest2, compareMethod);
             String msg = "Method " + compareMethod + " Perfect, Base-Half, Base-Test(1), Base-Test(2) : " + baseBase + " / " + baseHalf
                     + " / " + baseTest1 + " / " + baseTest2 + "\n";
             stringBuilder.append(msg);
         }
         Log.d(TAG, stringBuilder.toString());
         txvMsg.setText(stringBuilder.toString());
+    }
+
+    private Mat backProjection() {
+        //hsv变换
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(src, hsv, Imgproc.COLOR_BGR2HSV);
+        //分离 Hue 通道
+        Mat hue = new Mat(hsv.size(), hsv.depth());
+        Core.mixChannels(Arrays.asList(hsv), Arrays.asList(hue), new MatOfInt(0, 0));
+        //设置参数
+        int histSize = 25;
+        float[] hueRange = {0, 180};
+        //计算直方图
+        Mat hist = new Mat();
+        List<Mat> hueList = Arrays.asList(hue);
+        Imgproc.calcHist(hueList, new MatOfInt(0), new Mat(), hist,
+                new MatOfInt(histSize), new MatOfFloat(hueRange), false);
+        //规范化直方图
+        Core.normalize(hist, hist, 0, 255, Core.NORM_MINMAX);
+        //反向投影
+        Mat backProj = new Mat();
+        Imgproc.calcBackProject(hueList, new MatOfInt(0), hist, backProj,
+                new MatOfFloat(hueRange), 1);
+        return backProj;
     }
 
     private void loadImg() {
@@ -251,11 +281,11 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
                         src = new Mat(originImg.getHeight(), originImg.getWidth(), CvType.CV_8UC3);
                         //将原图bitmap转换为mat，这里src默认转为4通道。。。
                         Utils.bitmapToMat(originImg, src);
-                    }else if (srcIndex == 1){
+                    } else if (srcIndex == 1) {
                         imgSrc1.setImageBitmap(originImg);
                         src1 = new Mat(originImg.getHeight(), originImg.getWidth(), CvType.CV_8UC3);
                         Utils.bitmapToMat(originImg, src1);
-                    }else if (srcIndex == 2){
+                    } else if (srcIndex == 2) {
                         imgSrc2.setImageBitmap(originImg);
                         src2 = new Mat(originImg.getHeight(), originImg.getWidth(), CvType.CV_8UC3);
                         Utils.bitmapToMat(originImg, src2);

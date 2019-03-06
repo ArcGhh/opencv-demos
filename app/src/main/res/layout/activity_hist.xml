@@ -40,7 +40,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="直方图匹配" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBackProjection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="反向投影" />
         </LinearLayout>
 
         <LinearLayout
@@ -62,7 +73,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_img_add"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/imgSrc2"
@@ -71,7 +82,7 @@
                 android:layout_weight="1"
                 android:scaleType="fitCenter"
                 android:src="@mipmap/ic_img_add"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
@@ -84,6 +95,6 @@
             android:id="@+id/txvMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 </ScrollView>
