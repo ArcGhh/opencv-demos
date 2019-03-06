@@ -19,6 +19,7 @@ import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
@@ -34,7 +35,7 @@ import java.util.Random;
 public class ContourActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnFindContour;
+    Button btnLoadImg, btnFindContour, btnConvexHull;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -45,9 +46,11 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
 
         btnLoadImg = findViewById(R.id.btnLoadImg);
         btnFindContour = findViewById(R.id.btnFindContour);
+        btnConvexHull = findViewById(R.id.btnConvexHull);
 
         btnLoadImg.setOnClickListener(this);
         btnFindContour.setOnClickListener(this);
+        btnConvexHull.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -72,6 +75,9 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btnFindContour:
                 dst = findContour();
+                break;
+            case R.id.btnConvexHull:
+                dst = convexHull();
                 break;
         }
 
@@ -100,6 +106,47 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         for (int i = 0; i < contours.size(); i++) {
             Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
             Imgproc.drawContours(draw, contours, i, color, 2, Core.LINE_8, hierarchy, 0, new Point());
+        }
+
+        return draw;
+    }
+
+    private Mat convexHull(){
+        //设置参数
+        int threshold = 100;
+        Random rng = new Random(12345);
+        //灰度化
+        Mat gray = new Mat();
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        //平滑
+        Imgproc.blur(gray, gray, new Size(3,3));
+        //canny边缘检测
+        Mat canny = new Mat();
+        Imgproc.Canny(gray, canny, threshold, threshold * 2);
+        //寻找轮廓
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        //计算凸包
+        List<MatOfPoint> hullList = new ArrayList<>();
+        for (MatOfPoint contour : contours){
+            MatOfInt hull = new MatOfInt();
+            Imgproc.convexHull(contour, hull);
+
+            Point[] contourArray = contour.toArray();
+            Point[] hullPoints = new Point[hull.rows()];
+            List<Integer> hullContourIdxList = hull.toList();
+            for (int i = 0; i < hullContourIdxList.size(); i++) {
+                hullPoints[i] = contourArray[hullContourIdxList.get(i)];
+            }
+            hullList.add(new MatOfPoint(hullPoints));
+        }
+        //绘制边界和凸包
+        Mat draw = Mat.zeros(canny.size(), CvType.CV_8UC3);
+        for (int i = 0; i < contours.size(); i++) {
+            Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
+            Imgproc.drawContours(draw, contours, i, color);
+            Imgproc.drawContours(draw, hullList, i, color );
         }
 
         return draw;

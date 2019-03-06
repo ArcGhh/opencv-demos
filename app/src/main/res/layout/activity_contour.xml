@@ -29,6 +29,12 @@
                 android:layout_height="wrap_content"
                 android:text="寻找轮廓" />
 
+            <Button
+                android:id="@+id/btnConvexHull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="物体凸包" />
+
         </LinearLayout>
 
         <ImageView
