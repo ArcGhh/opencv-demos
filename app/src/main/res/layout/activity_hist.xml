@@ -52,6 +52,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="反向投影" />
+
+            <Button
+                android:id="@+id/btnTempMatch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="模板匹配" />
         </LinearLayout>
 
         <LinearLayout

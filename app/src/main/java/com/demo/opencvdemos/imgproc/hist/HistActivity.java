@@ -37,11 +37,13 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = "HistActivity";
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnHistEqu, btnHistCal, btnHistComp, btnBackProjection;
+    Button btnLoadImg, btnHistEqu, btnHistCal, btnHistComp,
+            btnBackProjection, btnTempMatch;
     ImageView imgSrc, imgDst, imgSrc1, imgSrc2;
     TextView txvMsg;
 
     int srcIndex = 0;
+    int tempMatchMethodIndex = 0;
 
     Mat src, src1, src2;
 
@@ -55,12 +57,14 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         btnHistCal = findViewById(R.id.btnHistCal);
         btnHistComp = findViewById(R.id.btnHistComp);
         btnBackProjection = findViewById(R.id.btnBackProjection);
+        btnTempMatch = findViewById(R.id.btnTempMatch);
 
         btnLoadImg.setOnClickListener(this);
         btnHistEqu.setOnClickListener(this);
         btnHistCal.setOnClickListener(this);
         btnHistComp.setOnClickListener(this);
         btnBackProjection.setOnClickListener(this);
+        btnTempMatch.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgSrc1 = findViewById(R.id.imgSrc1);
@@ -92,16 +96,16 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.btnHistEqu:
-                showLessView();
+                showNormalView();
                 dst = histEqualize();
                 break;
             case R.id.btnHistCal:
-                showLessView();
+                showNormalView();
                 dst = histCalculation();
                 break;
             case R.id.btnHistComp:
                 if (src1 == null || src2 == null) {
-                    showMoreView();
+                    showHistComView();
                 } else {
                     histComparison();
                 }
@@ -115,8 +119,19 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
                 loadImg();
                 break;
             case R.id.btnBackProjection:
-                showLessView();
+                showNormalView();
                 dst = backProjection();
+                break;
+            case R.id.btnTempMatch:
+                if (src1 == null){
+                    showTempMatchView();
+                }else {
+                    dst = templateMatching();
+                    tempMatchMethodIndex++;
+                    if (tempMatchMethodIndex > 5){
+                        tempMatchMethodIndex = 0;
+                    }
+                }
                 break;
         }
 
@@ -124,16 +139,23 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         showDst(dst);
     }
 
-    private void showMoreView() {
+    private void showHistComView() {
         imgDst.setVisibility(View.GONE);
         imgSrc1.setVisibility(View.VISIBLE);
         imgSrc2.setVisibility(View.VISIBLE);
         txvMsg.setVisibility(View.VISIBLE);
     }
 
-    private void showLessView() {
+    private void showNormalView() {
         imgDst.setVisibility(View.VISIBLE);
         imgSrc1.setVisibility(View.GONE);
+        imgSrc2.setVisibility(View.GONE);
+        txvMsg.setVisibility(View.GONE);
+    }
+
+    private void showTempMatchView(){
+        imgDst.setVisibility(View.VISIBLE);
+        imgSrc1.setVisibility(View.VISIBLE);
         imgSrc2.setVisibility(View.GONE);
         txvMsg.setVisibility(View.GONE);
     }
@@ -256,6 +278,43 @@ public class HistActivity extends AppCompatActivity implements View.OnClickListe
         Imgproc.calcBackProject(hueList, new MatOfInt(0), hist, backProj,
                 new MatOfFloat(hueRange), 1);
         return backProj;
+    }
+
+    private Mat templateMatching(){
+        //用于显示的图像
+        Mat display = new Mat();
+        src.copyTo(display);
+        //模板匹配结果
+        Mat result = new Mat();
+        int resultRows = src.rows() - src1.rows() + 1;
+        int resultCols = src.cols() - src1.cols() + 1;
+        result.create(resultRows, resultCols, CvType.CV_32FC1);
+        //初始化参数
+        boolean useMask = false;
+        Mat mask = new Mat();
+        Boolean methodAcceptsMask = (Imgproc.TM_SQDIFF == tempMatchMethodIndex
+                || tempMatchMethodIndex == Imgproc.TM_CCORR_NORMED);
+        //执行模板匹配
+        if (useMask && methodAcceptsMask) {
+            Imgproc.matchTemplate(src, src1, result, tempMatchMethodIndex, mask);
+        } else {
+            Imgproc.matchTemplate(src, src1, result, tempMatchMethodIndex);
+        }
+        //规范化结果
+        Core.normalize(result, result, 0, 1, Core.NORM_MINMAX, -1, new Mat());
+        //获取最佳位置
+        Point matchLoc;
+        Core.MinMaxLocResult mmr = Core.minMaxLoc(result);
+        if (tempMatchMethodIndex == Imgproc.TM_SQDIFF || tempMatchMethodIndex == Imgproc.TM_SQDIFF_NORMED) {
+            matchLoc = mmr.minLoc;
+        } else {
+            matchLoc = mmr.maxLoc;
+        }
+        //在显示图像上画出匹配区域
+        Imgproc.rectangle(display, matchLoc, new Point(matchLoc.x + src1.cols(), matchLoc.y + src1.rows()),
+                new Scalar(0, 0, 0), 2, 8, 0);
+
+        return display;
     }
 
     private void loadImg() {
