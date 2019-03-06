@@ -29,6 +29,12 @@
                 android:layout_height="wrap_content"
                 android:text="直方图均衡" />
 
+            <Button
+                android:id="@+id/btnHistCal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="直方图计算" />
+
         </LinearLayout>
 
         <ImageView
