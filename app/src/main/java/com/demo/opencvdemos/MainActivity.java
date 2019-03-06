@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.demo.opencvdemos.imgproc.blur.BlurActivity;
 import com.demo.opencvdemos.imgproc.border.BorderActivity;
+import com.demo.opencvdemos.imgproc.contour.ContourActivity;
 import com.demo.opencvdemos.imgproc.draw.DrawActivity;
 import com.demo.opencvdemos.imgproc.edge.EdgeActivity;
 import com.demo.opencvdemos.imgproc.hist.HistActivity;
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity{
 
     Button btnDraw, btnBlur, btnMorphology, btnPyramid,
             btnThreshold, btnBorder, btnEdge, btnHough,
-            btnRemap, btnHist,
+            btnRemap, btnHist, btnContour,
             btnMat, btnOne, btnTwo, btnThree, btnFour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity{
         btnHough = findViewById(R.id.btnHough);
         btnRemap = findViewById(R.id.btnRemap);
         btnHist = findViewById(R.id.btnHist);
+        btnContour = findViewById(R.id.btnContour);
 
         btnMat = findViewById(R.id.btnMat);
         btnOne = findViewById(R.id.btnOne);
@@ -116,6 +118,13 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, HistActivity.class));
+            }
+        });
+
+        btnContour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ContourActivity.class));
             }
         });
 

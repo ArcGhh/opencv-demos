@@ -65,7 +65,13 @@
         android:id="@+id/btnHist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="直方图" />
+        android:text="直方图/模板匹配" />
+
+    <Button
+        android:id="@+id/btnContour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="轮廓" />
 
     <Button
         android:id="@+id/btnMat"
