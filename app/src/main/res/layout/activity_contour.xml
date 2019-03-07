@@ -54,6 +54,12 @@
                 android:layout_height="wrap_content"
                 android:text="外接可倾斜矩形/圆" />
 
+            <Button
+                android:id="@+id/btnImgaeMoment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="图像矩" />
+
         </LinearLayout>
 
         <ImageView
@@ -67,5 +73,11 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/txvMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
     </LinearLayout>
 </ScrollView>

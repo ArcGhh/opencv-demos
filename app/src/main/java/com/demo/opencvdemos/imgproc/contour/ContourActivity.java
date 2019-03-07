@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.demo.opencvdemos.R;
@@ -29,9 +30,11 @@ import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.opencv.imgproc.Moments;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -40,8 +43,9 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
     private static final int REQ_CODE_PICK_IMG = 1;
 
     Button btnLoadImg, btnFindContour, btnConvexHull, btnBoundBoxAndCircle,
-            btnBoundRotatedBoxAndCircle;
+            btnBoundRotatedBoxAndCircle, btnImgaeMoment;
     ImageView imgSrc, imgDst;
+    TextView txvMsg;
 
     Mat src;
     @Override
@@ -54,15 +58,19 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         btnConvexHull = findViewById(R.id.btnConvexHull);
         btnBoundBoxAndCircle = findViewById(R.id.btnBoundBoxAndCircle);
         btnBoundRotatedBoxAndCircle = findViewById(R.id.btnBoundRotatedBoxAndCircle);
+        btnImgaeMoment = findViewById(R.id.btnImgaeMoment);
 
         btnLoadImg.setOnClickListener(this);
         btnFindContour.setOnClickListener(this);
         btnConvexHull.setOnClickListener(this);
         btnBoundBoxAndCircle.setOnClickListener(this);
         btnBoundRotatedBoxAndCircle.setOnClickListener(this);
+        btnImgaeMoment.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
+
+        txvMsg = findViewById(R.id.txvMsg);
     }
 
     public void onClick(View v) {
@@ -93,6 +101,10 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btnBoundRotatedBoxAndCircle:
                 dst = boundRotatedBoxAndCircle();
+                break;
+            case R.id.btnImgaeMoment:
+                txvMsg.setVisibility(View.VISIBLE);
+                dst = imageMoments();
                 break;
         }
 
@@ -249,6 +261,49 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
             for (int j = 0; j < 4; j++) {
                 Imgproc.line(draw, rectPoints[j], rectPoints[(j+1) % 4], color);
             }
+        }
+
+        return draw;
+    }
+
+    private Mat imageMoments(){
+        //设置参数
+        int threshold = 100;
+        Random rng = new Random(12345);
+        //灰度化和平滑降噪
+        Mat gray = new Mat();
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(gray, gray, new Size(3,3));
+        //canny边缘识别
+        Mat canny = new Mat();
+        Imgproc.Canny(gray, canny, threshold, threshold * 2);
+        //寻找轮廓
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
+
+        List<Moments> mu = new ArrayList<>(contours.size());
+        for (int i = 0; i < contours.size(); i++){
+            mu.add(Imgproc.moments(contours.get(i)));
+        }
+
+        List<Point> mc = new ArrayList<>(contours.size());
+        for (int i = 0; i < contours.size(); i++){
+            //add 1e-5 to avoid division by zero
+            mc.add(new Point(mu.get(i).m10 / (mu.get(i).m00 + 1e-5), mu.get(i).m01 / (mu.get(i).m00 + 1e-5)));
+        }
+
+        Mat draw = Mat.zeros(canny.size(),CvType.CV_8UC3);
+        for (int i=0;i<contours.size();i++){
+            Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
+            Imgproc.drawContours(draw, contours, i, color, 2);
+            Imgproc.circle(draw, mc.get(i), 4, color, -1);
+        }
+
+        for (int i = 0; i < contours.size(); i++) {
+            System.out.format(" * Contour[%d] - Area (M_00) = %.2f - Area OpenCV: %.2f - Length: %.2f\n", i,
+                    mu.get(i).m00, Imgproc.contourArea(contours.get(i)),
+                    Imgproc.arcLength(new MatOfPoint2f(contours.get(i).toArray()), true));
         }
 
         return draw;
