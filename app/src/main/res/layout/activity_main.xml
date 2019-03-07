@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,99 +7,106 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/btnDraw"
-        android:text="基本绘制"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnBlur"
-        android:text="图像模糊"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btnMorphology"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="形态学变换"/>
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btnPyramid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="影像金字塔"/>
+        <Button
+            android:id="@+id/btnDraw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="基本绘制" />
 
-    <Button
-        android:id="@+id/btnThreshold"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="基本阈值操作"/>
+        <Button
+            android:id="@+id/btnBlur"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="图像模糊" />
 
-    <Button
-        android:id="@+id/btnBorder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="图像边框"/>
+        <Button
+            android:id="@+id/btnMorphology"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="形态学变换" />
 
-    <Button
-        android:id="@+id/btnEdge"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="边缘检测"/>
+        <Button
+            android:id="@+id/btnPyramid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="影像金字塔" />
 
-    <Button
-        android:id="@+id/btnHough"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="霍夫线/圆变换"/>
+        <Button
+            android:id="@+id/btnThreshold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="基本阈值操作" />
 
-    <Button
-        android:id="@+id/btnRemap"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="重映射/仿射变换"/>
+        <Button
+            android:id="@+id/btnBorder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="图像边框" />
 
-    <Button
-        android:id="@+id/btnHist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="直方图/模板匹配" />
+        <Button
+            android:id="@+id/btnEdge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="边缘检测" />
 
-    <Button
-        android:id="@+id/btnContour"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="轮廓" />
+        <Button
+            android:id="@+id/btnHough"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="霍夫线/圆变换" />
 
-    <Button
-        android:id="@+id/btnMat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="mat"/>
+        <Button
+            android:id="@+id/btnRemap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="重映射/仿射变换" />
 
-    <Button
-        android:id="@+id/btnOne"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="one"/>
+        <Button
+            android:id="@+id/btnHist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="直方图/模板匹配" />
 
-    <Button
-        android:id="@+id/btnTwo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="tow"/>
+        <Button
+            android:id="@+id/btnContour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="轮廓" />
 
-    <Button
-        android:id="@+id/btnThree"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="three"/>
+        <Button
+            android:id="@+id/btnMat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="mat" />
 
-    <Button
-        android:id="@+id/btnFour"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="four"/>
-</LinearLayout>
+        <Button
+            android:id="@+id/btnOne"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="one" />
+
+        <Button
+            android:id="@+id/btnTwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="tow" />
+
+        <Button
+            android:id="@+id/btnThree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="three" />
+
+        <Button
+            android:id="@+id/btnFour"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="four" />
+    </LinearLayout>
+
+</ScrollView>
