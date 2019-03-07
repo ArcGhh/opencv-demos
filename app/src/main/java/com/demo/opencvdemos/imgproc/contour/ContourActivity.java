@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.demo.opencvdemos.R;
@@ -21,7 +22,9 @@ import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -35,7 +38,7 @@ import java.util.Random;
 public class ContourActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnFindContour, btnConvexHull;
+    Button btnLoadImg, btnFindContour, btnConvexHull, btnBoundBoxAndCircle;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -47,10 +50,12 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         btnLoadImg = findViewById(R.id.btnLoadImg);
         btnFindContour = findViewById(R.id.btnFindContour);
         btnConvexHull = findViewById(R.id.btnConvexHull);
+        btnBoundBoxAndCircle = findViewById(R.id.btnBoundBoxAndCircle);
 
         btnLoadImg.setOnClickListener(this);
         btnFindContour.setOnClickListener(this);
         btnConvexHull.setOnClickListener(this);
+        btnBoundBoxAndCircle.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -78,6 +83,9 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btnConvexHull:
                 dst = convexHull();
+                break;
+            case R.id.btnBoundBoxAndCircle:
+                dst = boundBoxAndCircle();
                 break;
         }
 
@@ -147,6 +155,49 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
             Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
             Imgproc.drawContours(draw, contours, i, color);
             Imgproc.drawContours(draw, hullList, i, color );
+        }
+
+        return draw;
+    }
+
+    private Mat boundBoxAndCircle(){
+        //设置参数
+        int threshold = 100;
+        Random rng = new Random(12345);
+        //灰度化和平滑降噪
+        Mat gray = new Mat();
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(gray, gray, new Size(3,3));
+        //canny边缘识别
+        Mat canny = new Mat();
+        Imgproc.Canny(gray, canny, threshold, threshold * 2);
+        //寻找轮廓
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
+        //外接矩形和外接圆
+        MatOfPoint2f[] contoursPoly = new MatOfPoint2f[contours.size()];
+        Rect[] boundRect = new Rect[contours.size()];
+        Point[] centers = new Point[contours.size()];
+        float[][] radius = new float[contours.size()][1];
+        for (int i = 0; i < contours.size(); i++){
+            contoursPoly[i] = new MatOfPoint2f();
+            Imgproc.approxPolyDP(new MatOfPoint2f(contours.get(i).toArray()), contoursPoly[i], 3, true);
+            boundRect[i] = Imgproc.boundingRect(new MatOfPoint(contoursPoly[i].toArray()));
+            centers[i] = new Point();
+            Imgproc.minEnclosingCircle(contoursPoly[i], centers[i], radius[i]);
+        }
+        //绘制
+        Mat draw = Mat.zeros(canny.size(), CvType.CV_8UC3);
+        List<MatOfPoint> contoursPolyList = new ArrayList<>(contoursPoly.length);
+        for (MatOfPoint2f poly : contoursPoly){
+            contoursPolyList.add(new MatOfPoint(poly.toArray()));
+        }
+        for (int i = 0; i < contours.size(); i++){
+            Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
+            Imgproc.drawContours(draw, contoursPolyList, i, color);
+            Imgproc.rectangle(draw, boundRect[i].tl(), boundRect[i].br(), color, 2);
+            Imgproc.circle(draw, centers[i], (int)radius[i][0], color, 2);
         }
 
         return draw;

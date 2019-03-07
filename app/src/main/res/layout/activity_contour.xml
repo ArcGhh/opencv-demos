@@ -35,6 +35,12 @@
                 android:layout_height="wrap_content"
                 android:text="物体凸包" />
 
+            <Button
+                android:id="@+id/btnBoundBoxAndCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="外接矩形/圆" />
+
         </LinearLayout>
 
         <ImageView
