@@ -43,6 +43,19 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBoundRotatedBoxAndCircle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="外接可倾斜矩形/圆" />
+
+        </LinearLayout>
+
         <ImageView
             android:id="@+id/imgSrc"
             android:layout_width="match_parent"

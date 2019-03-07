@@ -25,6 +25,7 @@ import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.RotatedRect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
@@ -38,7 +39,8 @@ import java.util.Random;
 public class ContourActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int REQ_CODE_PICK_IMG = 1;
 
-    Button btnLoadImg, btnFindContour, btnConvexHull, btnBoundBoxAndCircle;
+    Button btnLoadImg, btnFindContour, btnConvexHull, btnBoundBoxAndCircle,
+            btnBoundRotatedBoxAndCircle;
     ImageView imgSrc, imgDst;
 
     Mat src;
@@ -51,11 +53,13 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         btnFindContour = findViewById(R.id.btnFindContour);
         btnConvexHull = findViewById(R.id.btnConvexHull);
         btnBoundBoxAndCircle = findViewById(R.id.btnBoundBoxAndCircle);
+        btnBoundRotatedBoxAndCircle = findViewById(R.id.btnBoundRotatedBoxAndCircle);
 
         btnLoadImg.setOnClickListener(this);
         btnFindContour.setOnClickListener(this);
         btnConvexHull.setOnClickListener(this);
         btnBoundBoxAndCircle.setOnClickListener(this);
+        btnBoundRotatedBoxAndCircle.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -86,6 +90,9 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.btnBoundBoxAndCircle:
                 dst = boundBoxAndCircle();
+                break;
+            case R.id.btnBoundRotatedBoxAndCircle:
+                dst = boundRotatedBoxAndCircle();
                 break;
         }
 
@@ -198,6 +205,50 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
             Imgproc.drawContours(draw, contoursPolyList, i, color);
             Imgproc.rectangle(draw, boundRect[i].tl(), boundRect[i].br(), color, 2);
             Imgproc.circle(draw, centers[i], (int)radius[i][0], color, 2);
+        }
+
+        return draw;
+    }
+
+    private Mat boundRotatedBoxAndCircle(){
+        //设置参数
+        int threshold = 100;
+        Random rng = new Random(12345);
+        //灰度化和平滑降噪
+        Mat gray = new Mat();
+        Imgproc.cvtColor(src, gray, Imgproc.COLOR_BGR2GRAY);
+        Imgproc.blur(gray, gray, new Size(3,3));
+        //canny边缘识别
+        Mat canny = new Mat();
+        Imgproc.Canny(gray, canny, threshold, threshold * 2);
+        //寻找轮廓
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(canny, contours, hierarchy, Imgproc.RETR_TREE,Imgproc.CHAIN_APPROX_SIMPLE);
+        //外接可倾斜矩形/圆
+        RotatedRect[] minRect = new RotatedRect[contours.size()];
+        RotatedRect[] minEllipse = new RotatedRect[contours.size()];
+        for (int i = 0; i < contours.size(); i++){
+            minRect[i] = Imgproc.minAreaRect(new MatOfPoint2f(contours.get(i).toArray()));
+            minEllipse[i] = new RotatedRect();
+            if (contours.get(i).rows() > 5){
+                minEllipse[i] = Imgproc.fitEllipse(new MatOfPoint2f(contours.get(i).toArray()));
+            }
+        }
+        //绘制
+        Mat draw = Mat.zeros(canny.size(), CvType.CV_8UC3);
+        for (int i = 0; i < contours.size(); i++){
+            Scalar color = new Scalar(rng.nextInt(256), rng.nextInt(256), rng.nextInt(256));
+            // contour
+            Imgproc.drawContours(draw, contours, i, color);
+            // ellipse
+            Imgproc.ellipse(draw, minEllipse[i], color, 2);
+            // rotated rectangle
+            Point[] rectPoints = new Point[4];
+            minRect[i].points(rectPoints);
+            for (int j = 0; j < 4; j++) {
+                Imgproc.line(draw, rectPoints[j], rectPoints[(j+1) % 4], color);
+            }
         }
 
         return draw;
