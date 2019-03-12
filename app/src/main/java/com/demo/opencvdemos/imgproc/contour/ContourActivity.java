@@ -43,7 +43,7 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
     private static final int REQ_CODE_PICK_IMG = 1;
 
     Button btnLoadImg, btnFindContour, btnConvexHull, btnBoundBoxAndCircle,
-            btnBoundRotatedBoxAndCircle, btnImgaeMoment;
+            btnBoundRotatedBoxAndCircle, btnImgaeMoment, btnPointPolygonTest;
     ImageView imgSrc, imgDst;
     TextView txvMsg;
 
@@ -59,6 +59,7 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         btnBoundBoxAndCircle = findViewById(R.id.btnBoundBoxAndCircle);
         btnBoundRotatedBoxAndCircle = findViewById(R.id.btnBoundRotatedBoxAndCircle);
         btnImgaeMoment = findViewById(R.id.btnImgaeMoment);
+        btnPointPolygonTest = findViewById(R.id.btnPointPolygonTest);
 
         btnLoadImg.setOnClickListener(this);
         btnFindContour.setOnClickListener(this);
@@ -66,6 +67,7 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         btnBoundBoxAndCircle.setOnClickListener(this);
         btnBoundRotatedBoxAndCircle.setOnClickListener(this);
         btnImgaeMoment.setOnClickListener(this);
+        btnPointPolygonTest.setOnClickListener(this);
 
         imgSrc = findViewById(R.id.imgSrc);
         imgDst = findViewById(R.id.imgDst);
@@ -105,6 +107,9 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.btnImgaeMoment:
                 txvMsg.setVisibility(View.VISIBLE);
                 dst = imageMoments();
+                break;
+            case R.id.btnPointPolygonTest:
+                dst = pointPolygonTest();
                 break;
         }
 
@@ -307,6 +312,62 @@ public class ContourActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         return draw;
+    }
+
+    private Mat pointPolygonTest(){
+        //绘制多边形
+        int r = 100;
+        Mat src = Mat.zeros(new Size(4 * r, 4 * r), CvType.CV_8U);
+        List<Point> vert = new ArrayList<>(6);
+        vert.add(new Point(3 * r / 2, 1.34 * r));
+        vert.add(new Point(1 * r, 2 * r));
+        vert.add(new Point(3 * r / 2, 2.866 * r));
+        vert.add(new Point(5 * r / 2, 2.866 * r));
+        vert.add(new Point(3 * r, 2 * r));
+        vert.add(new Point(5 * r / 2, 1.34 * r));
+        for (int i = 0; i < 6; i++) {
+            Imgproc.line(src, vert.get(i), vert.get((i + 1) % 6), new Scalar(255), 3);
+        }
+        //查询轮廓
+        List<MatOfPoint> contours = new ArrayList<>();
+        Mat hierarchy = new Mat();
+        Imgproc.findContours(src, contours, hierarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
+        //多边形测试
+        Mat rawDist = new Mat(src.size(), CvType.CV_32F);
+        float[] rawDistData = new float[(int) (rawDist.total() * rawDist.channels())];
+        for (int i = 0; i < src.rows(); i++) {
+            for (int j = 0; j < src.cols(); j++) {
+                rawDistData[i * src.cols() + j] = (float) Imgproc
+                        .pointPolygonTest(new MatOfPoint2f(contours.get(0).toArray()), new Point(j, i), true);
+            }
+        }
+        rawDist.put(0, 0, rawDistData);
+
+        Core.MinMaxLocResult res = Core.minMaxLoc(rawDist);
+        double minVal = Math.abs(res.minVal);
+        double maxVal = Math.abs(res.maxVal);
+        //可视化距离
+        Mat drawing = Mat.zeros(src.size(), CvType.CV_8UC3);
+        byte[] drawingData = new byte[(int) (drawing.total() * drawing.channels())];
+        for (int i = 0; i < src.rows(); i++) {
+            for (int j = 0; j < src.cols(); j++) {
+                if (rawDistData[i * src.cols() + j] < 0) {
+                    drawingData[(i * src.cols() + j) * 3] =
+                            (byte) (255 - Math.abs(rawDistData[i * src.cols() + j]) * 255 / minVal);
+                } else if (rawDistData[i * src.cols() + j] > 0) {
+                    drawingData[(i * src.cols() + j) * 3 + 2] =
+                            (byte) (255 - rawDistData[i * src.cols() + j] * 255 / maxVal);
+                } else {
+                    drawingData[(i * src.cols() + j) * 3] = (byte) 255;
+                    drawingData[(i * src.cols() + j) * 3 + 1] = (byte) 255;
+                    drawingData[(i * src.cols() + j) * 3 + 2] = (byte) 255;
+                }
+            }
+        }
+        drawing.put(0, 0, drawingData);
+        Imgproc.circle(drawing, res.maxLoc, (int)res.maxVal, new Scalar(255, 255, 255), 2, 8, 0);
+
+        return drawing;
     }
 
     private void loadImg() {

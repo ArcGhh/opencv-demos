@@ -60,6 +60,12 @@
                 android:layout_height="wrap_content"
                 android:text="图像矩" />
 
+            <Button
+                android:id="@+id/btnPointPolygonTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="多边形测试" />
+
         </LinearLayout>
 
         <ImageView
