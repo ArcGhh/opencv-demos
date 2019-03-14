@@ -29,6 +29,25 @@
                 android:layout_height="wrap_content"
                 android:text="harris 角点检测" />
 
+            <Button
+                android:id="@+id/btnShiTomasi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="shi-tomasi 角点检测" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnCustom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="自定义角点检测" />
+
         </LinearLayout>
 
         <ImageView
