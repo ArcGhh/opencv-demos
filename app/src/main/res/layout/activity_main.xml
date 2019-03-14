@@ -79,6 +79,12 @@
             android:text="轮廓" />
 
         <Button
+            android:id="@+id/btnCornerDetector"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="角点检测" />
+
+        <Button
             android:id="@+id/btnMat"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

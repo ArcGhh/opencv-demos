@@ -35,7 +35,8 @@
         <activity android:name=".imgproc.hough.HoughActivity" />
         <activity android:name=".imgproc.remap.RemapActivity" />
         <activity android:name=".imgproc.hist.HistActivity" />
-        <activity android:name=".imgproc.contour.ContourActivity"></activity>
+        <activity android:name=".imgproc.contour.ContourActivity" />
+        <activity android:name=".feature2d.cornerdetector.CornerDectctorActivity"></activity>
     </application>
 
 </manifest>
